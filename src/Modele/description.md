@@ -1,4 +1,4 @@
-#Principe du modèle
+qaqq#Principe du modèle
 * Objectif : regrouper les fonctions de manipulations de la base de données
 * un fichier pour chaque table
 * nom du fichier "Modele_"<nom de la table>"

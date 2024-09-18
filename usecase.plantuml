@@ -9,14 +9,25 @@ usecase (Modifier  mon mot de passe) as UC_MDP
 usecase (gérer produit) as UC_G_Produit
 usecase (gérer catégorie produit) as UC_G_Cat_Produit
 
-
-
 actor :administrateur du logiciel: as admin
 actor :utilisateur Cafe: as userCafe
 actor :entreprise cliente: as entreprise
 actor :salarié entreprise cliente: as salarie
+actor :redacteur: as redacteur
+actor :commercial: as commercial
 
-
+admin-->UC_Gerer_Compte
+admin-->UC_MDP
+redacteur-->UC_Gerer_Catalogue
+redacteur-->UC_G_Produit
+redacteur-->UC_G_Cat_Produit
+redacteur-->UC_MDP
+userCafe-->UC_MDP
+commercial-->UC_Gerer_Commande
+commercial-->UC_Gerer_Entreprise
+commercial-->UC_MDP
+salarie-->UC_MDP
+entreprise-->UC_MDP
 
 
 @enduml
