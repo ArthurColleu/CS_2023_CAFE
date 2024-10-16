@@ -12,6 +12,7 @@ use App\Vue\Vue_Structure_Entete;
 
 use PHPMailer\PHPMailer\PHPMailer;
 //Ce contrôleur gère le formulaire de connexion pour les visiteurs
+//include "./Controleur/Controleur_AccepterRGPD.php";
 
 $Vue->setEntete(new Vue_Structure_Entete());
 
@@ -42,35 +43,39 @@ switch ($action) {
                         $_SESSION["idUtilisateur"] = $utilisateur["idUtilisateur"];
                         //error_log("idUtilisateur : " . $_SESSION["idUtilisateur"]);
                         $_SESSION["idCategorie_utilisateur"] = $utilisateur["idCategorie_utilisateur"];
-                        echo "idCategorie_utilisateur : " . $_SESSION["idCategorie_utilisateur"];
                         //error_log("idCategorie_utilisateur : " . $_SESSION["idCategorie_utilisateur"]);
                       //  var_dump($utilisateur);
-                        switch ($utilisateur["idCategorie_utilisateur"]) {
-                            case 1:
-                                $_SESSION["typeConnexionBack"] = "administrateurLogiciel"; //Champ inutile, mais bien pour voir ce qu'il se passe avec des étudiants !
-                                $Vue->setMenu(new Vue_Menu_Administration($_SESSION["typeConnexionBack"]));
-                                break;
-                            case 2:
-                                $_SESSION["typeConnexionBack"] = "gestionnaireCatalogue";
-                                $Vue->setMenu(new Vue_Menu_Administration($_SESSION["typeConnexionBack"]));
-                                $Vue->addToCorps(new \App\Vue\Vue_AfficherMessage("Bienvenue " . $_REQUEST["compte"]));
-                                break;
-                            case 3:
-                                $_SESSION["typeConnexionBack"] = "entrepriseCliente";
-                                //error_log("idUtilisateur : " . $_SESSION["idUtilisateur"]);
-                                $_SESSION["idEntreprise"] = Modele_Entreprise::Entreprise_Select_Par_IdUtilisateur($_SESSION["idUtilisateur"])["idEntreprise"];
-                                include "./Controleur/Controleur_Gerer_Entreprise.php";
-                                break;
-                            case 4:
-                                $_SESSION["typeConnexionBack"] = "salarieEntrepriseCliente";
-                                $_SESSION["idSalarie"] = $utilisateur["idUtilisateur"];
-                                $_SESSION["idEntreprise"] = Modele_Salarie::Salarie_Select_byId($_SESSION["idUtilisateur"])["idEntreprise"];
-                                include "./Controleur/Controleur_Catalogue_client.php";
-                                break;
-                            case 5:
-                                $_SESSION["typeConnexionBack"] = "commercialCafe";
-                                $Vue->setMenu(new Vue_Menu_Administration($_SESSION["typeConnexionBack"]));
-                                break;
+
+                        if ($utilisateur["aAccepteRGPD"]){
+                            switch ($utilisateur["idCategorie_utilisateur"]) {
+                                case 1:
+                                    $_SESSION["typeConnexionBack"] = "administrateurLogiciel"; //Champ inutile, mais bien pour voir ce qu'il se passe avec des étudiants !
+                                    $Vue->setMenu(new Vue_Menu_Administration($_SESSION["typeConnexionBack"]));
+                                    break;
+                                case 2:
+                                    $_SESSION["typeConnexionBack"] = "gestionnaireCatalogue";
+                                    $Vue->setMenu(new Vue_Menu_Administration($_SESSION["typeConnexionBack"]));
+                                    $Vue->addToCorps(new \App\Vue\Vue_AfficherMessage("Bienvenue " . $_REQUEST["compte"]));
+                                    break;
+                                case 3:
+                                    $_SESSION["typeConnexionBack"] = "entrepriseCliente";
+                                    //error_log("idUtilisateur : " . $_SESSION["idUtilisateur"]);
+                                    $_SESSION["idEntreprise"] = Modele_Entreprise::Entreprise_Select_Par_IdUtilisateur($_SESSION["idUtilisateur"])["idEntreprise"];
+                                    include "./Controleur/Controleur_Gerer_Entreprise.php";
+                                    break;
+                                case 4:
+                                    $_SESSION["typeConnexionBack"] = "salarieEntrepriseCliente";
+                                    $_SESSION["idSalarie"] = $utilisateur["idUtilisateur"];
+                                    $_SESSION["idEntreprise"] = Modele_Salarie::Salarie_Select_byId($_SESSION["idUtilisateur"])["idEntreprise"];
+                                    include "./Controleur/Controleur_Catalogue_client.php";
+                                    break;
+                                case 5:
+                                    $_SESSION["typeConnexionBack"] = "commercialCafe";
+                                    $Vue->setMenu(new Vue_Menu_Administration($_SESSION["typeConnexionBack"]));
+                                    break;
+                            }
+                        } else{
+                            $Vue->addToCorps(new \App\Vue\Vue_ConsentementRGPD());
                         }
 
                     } else {//mot de passe pas bon
