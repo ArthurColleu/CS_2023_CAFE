@@ -9,8 +9,8 @@ use App\Vue\Vue_Mail_ReinitMdp;
 use App\Vue\Vue_Menu_Administration;
 use App\Vue\Vue_Structure_BasDePage;
 use App\Vue\Vue_Structure_Entete;
-
 use PHPMailer\PHPMailer\PHPMailer;
+
 //Ce contrôleur gère le formulaire de connexion pour les visiteurs
 
 $Vue->setEntete(new Vue_Structure_Entete());
@@ -25,7 +25,6 @@ switch ($action) {
         break;
     case "reinitmdp":
 
-
         $Vue->addToCorps(new Vue_Mail_ReinitMdp());
 
         break;
@@ -34,10 +33,6 @@ switch ($action) {
             //Si tous les paramètres du formulaire sont bons
 
             $utilisateur = Modele_Utilisateur::Utilisateur_Select_ParLogin($_REQUEST["compte"]);
-            if (isset($_POST["aAccepterRGPD"])){
-                $utilisateur["aAccepterRGPD"]=1;
-                $utilisateur["DateAcceptationRGPD"]=date("Y-m-d");
-            }
             if ($utilisateur != null) {
                 //error_log("utilisateur : " . $utilisateur["idUtilisateur"]);
                 if ($utilisateur["desactiver"] == 0) {
@@ -50,21 +45,22 @@ switch ($action) {
                             case 1:
                                 $_SESSION["typeConnexionBack"] = "administrateurLogiciel"; //Champ inutile, mais bien pour voir ce qu'il se passe avec des étudiants !
                                 if ($utilisateur["aAccepterRGPD"]==0){
-                                    $Vue->addToCorps(new \App\Vue\Vue_ConsentementRGPD());
+                                    include "./Controleur/Controleur_AccepterRGPD.php";
                                 }
-                                $Vue->setMenu(new Vue_Menu_Administration());
+                                else
+                                         $Vue->setMenu(new Vue_Menu_Administration());
                                 break;
                             case 2:
                                 $_SESSION["typeConnexionBack"] = "utilisateurCafe";
                                 if ($utilisateur["aAccepterRGPD"]==0){
-                                    $Vue->addToCorps(new \App\Vue\Vue_ConsentementRGPD());
+                                    include "./Controleur/Controleur_AccepterRGPD.php";
                                 }
                                 $Vue->setMenu(new Vue_Menu_Administration());
                                 break;
                             case 3:
                                 $_SESSION["typeConnexionBack"] = "entrepriseCliente";
                                 if ($utilisateur["aAccepterRGPD"]==0){
-                                    $Vue->addToCorps(new \App\Vue\Vue_ConsentementRGPD());
+                                    include "./Controleur/Controleur_AccepterRGPD.php";
                                 }
                                 //error_log("idUtilisateur : " . $_SESSION["idUtilisateur"]);
                                 $_SESSION["idEntreprise"] = Modele_Entreprise::Entreprise_Select_Par_IdUtilisateur($_SESSION["idUtilisateur"])["idEntreprise"];
@@ -73,7 +69,7 @@ switch ($action) {
                             case 4:
                                 $_SESSION["typeConnexionBack"] = "salarieEntrepriseCliente";
                                 if ($utilisateur["aAccepterRGPD"]==0){
-                                    $Vue->addToCorps(new \App\Vue\Vue_ConsentementRGPD());
+                                    include "./Controleur/Controleur_AccepterRGPD.php";
                                 }
                                 $_SESSION["idSalarie"] = $utilisateur["idUtilisateur"];
                                 $_SESSION["idEntreprise"] = Modele_Salarie::Salarie_Select_byId($_SESSION["idUtilisateur"])["idEntreprise"];
