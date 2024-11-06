@@ -47,10 +47,10 @@ else
 
 switch ($typeConnexion) {
     case "visiteur" :
-
         include "Controleur/Controleur_visiteur.php";
         break;
-    case "utilisateurCafe":
+    case "gestionnaireCatalogue":
+    case "commercialCafe":
     case "administrateurLogiciel":
         switch ($case) {
             case "Gerer_CommandeClient":
@@ -69,11 +69,8 @@ switch ($typeConnexion) {
             case "Gerer_monCompte":
                 include "Controleur/Controleur_Gerer_monCompte.php";
                 break;
-            case "RGPD":
-                include "Controleur/Controleur_AccepterRGPD.php";
-                break;
             default:
-                $Vue->setMenu(new Vue_Menu_Administration());
+                $Vue->setMenu(new Vue_Menu_Administration($typeConnexion));
                 break;
         }
         break;
@@ -94,9 +91,6 @@ switch ($typeConnexion) {
             case "Gerer_Entreprise" :
                 include "Controleur/Controleur_Gerer_Entreprise.php";
                 break;
-            case "RGPD":
-                include "Controleur/Controleur_AccepterRGPD.php";
-                break;
             case "Cas_Par_Defaut":
             case "Gerer_catalogue":
             case "Catalogue_client":
@@ -104,5 +98,7 @@ switch ($typeConnexion) {
                 include "Controleur/Controleur_Catalogue_client.php";
                 break;
         }
+    default:
+        $Vue->addToCorps(new Vue_AfficherMessage("Type de connexion non reconnu"));
 }
 $Vue->afficher();
