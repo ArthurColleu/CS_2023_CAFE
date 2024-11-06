@@ -137,21 +137,21 @@ WHERE idUtilisateur = :paramidUtilisateur');
         return $reponse;
     }
 
-    static function Utilisateur_Modifier_RGPD($aAccepterRGPD, $dateAcceptationRGPD, $Ip_Utilisateur){
+    static function Utilisateur_Modifier_RGPD($aAccepterRGPD, $dateAcceptationRGPD, $Ip_Utilisateur , $id_Utilisateur){
         $connexionPDO = Singleton_ConnexionPDO::getInstance();
 
         $requetePreparee = $connexionPDO->prepare(
             'UPDATE `utilisateur`
-            SET `aAccepetRGPD`= :aAccepterRGPD,
+            SET `aAccepterRGPD`= :aAccepterRGPD,
                 `dateAcceptionRGPD`= :dateAccepterRGPD,
                 `IP`=:Ip_Utilisateur
 WHERE idUtilisateur = :paramId'
         );
-        $requetePreparee->bindParam('paramlogin', $login);
-        $requetePreparee->bindParam('paramidCategorie_utilisateur', $idCodeCategorie);
-        $requetePreparee->bindParam('paramidUtilisateur', $idUtilisateur);
+        $requetePreparee->bindParam('aAccepterRGPD', $aAccepterRGPD);
+        $requetePreparee->bindParam('dateAccepterRGPD', $dateAcceptationRGPD);
+        $requetePreparee->bindParam('Ip_Utilisateur', $Ip_Utilisateur);
+        $requetePreparee->bindParam('paramId', $id_Utilisateur);
         $reponse = $requetePreparee->execute(); //$reponse boolean sur l'état de la requête
-
 
         return $reponse;
 

@@ -47,6 +47,7 @@ else
 
 switch ($typeConnexion) {
     case "visiteur" :
+
         include "Controleur/Controleur_visiteur.php";
         break;
     case "utilisateurCafe":
@@ -67,6 +68,9 @@ switch ($typeConnexion) {
                 break;
             case "Gerer_monCompte":
                 include "Controleur/Controleur_Gerer_monCompte.php";
+                break;
+            case "RGPD":
+                include "Controleur/Controleur_AccepterRGPD.php";
                 break;
             default:
                 $Vue->setMenu(new Vue_Menu_Administration());
@@ -89,6 +93,9 @@ switch ($typeConnexion) {
             case "Gerer_monCompte" :
             case "Gerer_Entreprise" :
                 include "Controleur/Controleur_Gerer_Entreprise.php";
+                break;
+            case "RGPD":
+                include "Controleur/Controleur_AccepterRGPD.php";
                 break;
             case "Cas_Par_Defaut":
             case "Gerer_catalogue":

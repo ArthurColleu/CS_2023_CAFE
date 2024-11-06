@@ -1,33 +1,32 @@
 <?php
 
+use App\Modele\Modele_Utilisateur;
 use App\Vue\Vue_Connexion_Formulaire_client;
 use App\Vue\Vue_ConsentementRGPD;
 use App\Vue\Vue_Menu_Administration;
+use App\Vue\Vue_Menu_Entreprise_Client;
 use App\Vue\Vue_Structure_Entete;
 
 switch ($action) {
     case "accepte_RGPD":
-        $utilisateur["aAccepterRGPD"] = 1;
-        $utilisateur["DateAcceptationRGPD"] = date("Y-m-d");
-        $utilisateur["IP"] = $_SERVER['REMOTE_ADDR'];
+        Modele_Utilisateur::Utilisateur_Modifier_RGPD(1, date("Y-m-d"), $_SERVER['REMOTE_ADDR'], $_SESSION["idUtilisateur"]);
         //Appel à une nouvelle fonction du modèle  $_SESSION["idUtilisateur"]
         switch ($_SESSION["typeConnexionBack"]) {
             case "administrateurLogiciel":
-                $_SESSION["typeConnexionBack"] = "administrateurLogiciel"; //Champ inutile, mais bien pour voir ce qu'il se passe avec des étudiants !
-                    $Vue->setMenu(new Vue_Menu_Administration());
+                $Vue->setMenu(new Vue_Menu_Administration());
                 break;
             case "utilisateurCafe":
 
                 $Vue->setMenu(new Vue_Menu_Administration());
                 break;
             case "entrepriseCliente":
-                     include "./Controleur/Controleur_Gerer_Entreprise.php";
+                $Vue->SetMenu(new \App\Vue\Vue_Menu_Entreprise_Client());
                 break;
             case "salarieEntrepriseCliente":
-                  include "./Controleur/Controleur_Catalogue_client.php";
+                $Vue->setMenu(new \App\Vue\Vue_Menu_Entreprise_Salarie());
                 break;
         }
-    break;
+        break;
     case "refuser_RGPD":
         session_destroy();
         unset($_SESSION);
@@ -35,8 +34,8 @@ switch ($action) {
         $Vue->addToCorps(new Vue_Connexion_Formulaire_client());
         break;
     default:
-            $Vue->addToCorps(new Vue_ConsentementRGPD());
-            break;
+        $Vue->addToCorps(new Vue_ConsentementRGPD());
+        break;
 
 
 }
