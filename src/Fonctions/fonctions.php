@@ -20,7 +20,7 @@ function CalculComplexiteMdp($mdp) :int
 
     if (preg_match('/[0-9]/', $mdp)) $baseCara += 10 ;
 
-    if (preg_match('/[a-zA-Z0-9]/', $mdp)) $baseCara += 10;
+    if (preg_match('/[^a-zA-Z0-9]/', $mdp)) $baseCara += 10;
 
     return $nbChar * log($baseCara, 2);
 }
