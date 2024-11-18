@@ -4,11 +4,12 @@ use App\Utilitaire\Vue_Composant;
 
 class Vue_Menu_Administration extends Vue_Composant
 {
-    private string $typeDeVue="";
-    public function __construct($typeDeVue )
+    private string $typeDeVue;
+    public function __construct(string $typeDeVue)
     {
-        $this->typeDeVue=$typeDeVue ;
+        $this->typeDeVue = $_SESSION["typeConnexionBack"];
     }
+
     function donneTexte(): string
     {
         switch($this->typeDeVue)

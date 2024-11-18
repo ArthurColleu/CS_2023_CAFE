@@ -13,17 +13,17 @@ switch ($action) {
         //Appel à une nouvelle fonction du modèle  $_SESSION["idUtilisateur"]
         switch ($_SESSION["typeConnexionBack"]) {
             case "administrateurLogiciel":
-                $Vue->setMenu(new Vue_Menu_Administration());
+                $Vue->setMenu(new Vue_Menu_Administration($_SESSION["typeConnexionBack"]));
                 break;
             case "utilisateurCafe":
 
-                $Vue->setMenu(new Vue_Menu_Administration());
+                $Vue->setMenu(new Vue_Menu_Administration($_SESSION["typeConnexionBack"]));
                 break;
             case "entrepriseCliente":
                 $Vue->SetMenu(new \App\Vue\Vue_Menu_Entreprise_Client());
                 break;
             case "salarieEntrepriseCliente":
-                $Vue->setMenu(new \App\Vue\Vue_Menu_Entreprise_Salarie());
+                $Vue->setMenu(new \App\Vue\Vue_Menu_Entreprise_Salarie($_SESSION["typeConnexionBack"]));
                 break;
         }
         break;
