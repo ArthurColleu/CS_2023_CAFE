@@ -18,7 +18,12 @@ switch ($action) {
     case "reinitmdpconfirm":
 
           //comme un qqc qui manque... je dis ça ! je dis rien !
-
+        if (isset($_POST["email"])){
+            $nouveauMDP = \App\Fonctions\tokenMotDePasse(30);
+            \App\Fonctions\envoieMail($nouveauMDP);
+            Modele_Utilisateur::Utilisateur_Modifier_motDePasse(Modele_Utilisateur::Utilisateur_Select_ParLogin($_POST["email"])["idUtilisateur"],$nouveauMDP);
+        }
+        $_SESSION["reinitmdp"] = true;
         $Vue->addToCorps(new Vue_Mail_Confirme());
 
         break;
@@ -36,6 +41,9 @@ switch ($action) {
                 //error_log("utilisateur : " . $utilisateur["idUtilisateur"]);
                 if ($utilisateur["desactiver"] == 0) {
                     if ($_REQUEST["password"] == $utilisateur["motDePasse"]) {
+                        if ( isset($_SESSION["reinitmdp"]) && $_SESSION["reinitmdp"]) {
+                            header("Location:index.php?case=Gerer_monCompte&action=changerMDP");
+                        }
                         $_SESSION["idUtilisateur"] = $utilisateur["idUtilisateur"];
                         //error_log("idUtilisateur : " . $_SESSION["idUtilisateur"]);
                         $_SESSION["idCategorie_utilisateur"] = $utilisateur["idCategorie_utilisateur"];
