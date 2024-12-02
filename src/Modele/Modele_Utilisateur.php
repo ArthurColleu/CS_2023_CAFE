@@ -87,7 +87,7 @@ class Modele_Utilisateur
         $requetePreparee->bindParam('paramlogin', $login);
         $requetePreparee->bindParam('paramidCategorie_utilisateur', $codeCategorie);
         $reponse = $requetePreparee->execute(); //$reponse boolean sur l'état de la requête
-        if($reponse != false) {
+        if($reponse) {
             $idUtilisateur = $connexionPDO->lastInsertId();
             $desactiver = 0;
             self::Utilisateur_Modifier_Desactivation($idUtilisateur, $desactiver);

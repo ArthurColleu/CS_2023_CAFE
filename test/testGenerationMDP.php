@@ -13,12 +13,6 @@ function passgen2($nbChar){
     return substr(str_shuffle(
         'abcdefghijklmnopqrstuvwxyzABCEFGHIJKLMNOPQRSTUVWXYZ0123456789'),1, $nbChar); }
 
-
-
-
-
-
-
 //echo passgen1(10);
 echo"\n";
 //echo passgen2(10);
