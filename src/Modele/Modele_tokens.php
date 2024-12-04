@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Modele;
 use App\Utilitaire\Singleton_ConnexionPDO;
 use DateTime;
@@ -28,7 +27,6 @@ class Modele_tokens
         $dateFin=$dateFin->format('Y-m-d H:i:s');
         $octetsAleatoires = openssl_random_pseudo_bytes (256) ;
         $jeton = sodium_bin2base64($octetsAleatoires, SODIUM_BASE64_VARIANT_ORIGINAL);
-
         $connexionPDO = Singleton_ConnexionPDO::getInstance();
         $requetePreparee = $connexionPDO->prepare(
             'INSERT INTO `token`
@@ -40,14 +38,17 @@ class Modele_tokens
         $requetePreparee->execute();
     }
 
-    function Tokens_Update_date($dateFin)
+    function Tokens_Update_date($id, $dateFin)
     {
+        $dateFin = new \DateTime($dateFin);
+        $dateFin = $dateFin->format('Y-m-d H:i:s');
         $connexionPDO = Singleton_ConnexionPDO::getInstance();
         $requetePreparee = $connexionPDO->prepare(
             'UPDATE `token`
-            SET paramDateFin = :paramDateFin ;');
+            SET dateFin = :paramDateFin
+            WHERE id = :id;');
+        $requetePreparee->bindParam('id', $id);
         $requetePreparee->bindParam('paramDateFin', $dateFin);
         $requetePreparee->execute();
     }
-
 }
