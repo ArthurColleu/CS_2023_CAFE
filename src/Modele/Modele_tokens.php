@@ -2,6 +2,7 @@
 
 namespace App\Modele;
 use App\Utilitaire\Singleton_ConnexionPDO;
+use DateTime;
 use PDO;
 
 class Modele_tokens
@@ -21,20 +22,30 @@ class Modele_tokens
         return false;
     }
 
-
     function Tokens_Creer($codeAction, $idUtilisateur,$dateFin)
     {
+        $dateFin= new \DateTime($dateFin);
+        $dateFin=$dateFin->format('Y-m-d H:i:s');
         $octetsAleatoires = openssl_random_pseudo_bytes (256) ;
         $jeton = sodium_bin2base64($octetsAleatoires, SODIUM_BASE64_VARIANT_ORIGINAL);
 
         $connexionPDO = Singleton_ConnexionPDO::getInstance();
         $requetePreparee = $connexionPDO->prepare(
-            'INSERT INTO `utilisateur`
+            'INSERT INTO `token`
          VALUES (NULL,:paramValeur, :paramCodeAction, :paramIdUtilisateur, :paramDateFin);');
-
         $requetePreparee->bindParam('paramValeur', $jeton);
         $requetePreparee->bindParam('paramCodeAction', $codeAction);
         $requetePreparee->bindParam('paramIdUtilisateur', $idUtilisateur);
+        $requetePreparee->bindParam('paramDateFin', $dateFin);
+        $requetePreparee->execute();
+    }
+
+    function Tokens_Update_date($dateFin)
+    {
+        $connexionPDO = Singleton_ConnexionPDO::getInstance();
+        $requetePreparee = $connexionPDO->prepare(
+            'UPDATE `token`
+            SET paramDateFin = :paramDateFin ;');
         $requetePreparee->bindParam('paramDateFin', $dateFin);
         $requetePreparee->execute();
     }
