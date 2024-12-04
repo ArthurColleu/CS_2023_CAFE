@@ -39,6 +39,7 @@ class Vue_Mail_ReinitMdp extends Vue_Composant
         $str .=  "
 </form>
     ";
+
         return $str;
     }
 }
