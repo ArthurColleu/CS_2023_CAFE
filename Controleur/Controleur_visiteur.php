@@ -13,7 +13,7 @@ use App\Vue\Vue_Structure_Entete;
 use PHPMailer\PHPMailer\PHPMailer;
 
 //Ce contrôleur gère le formulaire de connexion pour les visiteurs
-$Vue->setEntete(new Vue_Structure_Entete());
+//$Vue->setEntete(new Vue_Structure_Entete());
 
 switch ($action) {
     case "reinitmdpconfirm":
