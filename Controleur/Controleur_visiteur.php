@@ -33,8 +33,11 @@ switch ($action) {
         $id_utilisateur = \App\Modele\Modele_Utilisateur::Utilisateur_Select_ParLogin($_POST["email"])["idUtilisateur"];
         $date = new \DateTime();
         $date=$date->modify('+1 hour')->format('Y-m-d H:i:s');
-        Modele_tokens::Tokens_Creer("519", $id_utilisateur,$date);
+        (new App\Modele\Modele_tokens)->Tokens_Creer("519", $id_utilisateur,$date);
         \App\Fonctions\envoieMail($valeurToken);
+        $_SESSION["reinitmdp"] = true;
+        $Vue->addToCorps(new Vue_Mail_Confirme());
+
         break;
     case "reinitmdp":
 

@@ -38,6 +38,7 @@ function tokenMotDePasse($nbChar){
 }
     function envoieMail($token)
     {
+        $bodyMail = htmlspecialchars("<a href='127.0.0.1:63342/CS_2023_CAFE/index.php?action=token&token=$token'>Lien à cliquer </a>", ENT_QUOTES);
         $mail = new PHPMailer;
         $mail->isSMTP();
         $mail->Host = '127.0.0.1';
@@ -49,7 +50,7 @@ function tokenMotDePasse($nbChar){
         if ($mail->addReplyTo($_POST["email"], 'café')) {
             $mail->Subject = 'Objet : Réinitialisation de mot de passe !';
             $mail->isHTML(false);
-            $mail->Body = "Veuillez cliquer sur ce lien pour réinitialiser votre mdp : <a href='127.0.0.1:63342/CS_2023_CAFE/index.php?action=token&token=$token'>Lien à cliquer </a> ";
+            $mail->Body = "Veuillez cliquer sur ce lien pour réinitialiser votre mdp : $bodyMail";
             if (!$mail->send()) {
                 $msg = 'Désolé, quelque chose a mal tourné. Veuillez réessayer plus tard.';
             } else {
