@@ -6,6 +6,7 @@ use App\Modele\Modele_Utilisateur;
 use App\Vue\Vue_Connexion_Formulaire_client;
 use App\Vue\Vue_Mail_Confirme;
 use App\Vue\Vue_Mail_ReinitMdp;
+use App\Modele\Modele_tokens;
 use App\Vue\Vue_Menu_Administration;
 use App\Vue\Vue_Structure_BasDePage;
 use App\Vue\Vue_Structure_Entete;
@@ -16,7 +17,6 @@ $Vue->setEntete(new Vue_Structure_Entete());
 
 switch ($action) {
     case "reinitmdpconfirm":
-
           //comme un qqc qui manque... je dis ça ! je dis rien !
         if (isset($_POST["email"])){
             $nouveauMDP = \App\Fonctions\tokenMotDePasse(30);
@@ -26,6 +26,16 @@ switch ($action) {
         $_SESSION["reinitmdp"] = true;
         $Vue->addToCorps(new Vue_Mail_Confirme());
 
+        break;
+    case "reinitmdpconfirmTokens":
+        $valeurToken = \App\Fonctions\tokenMotDePasse(30);
+        \App\Fonctions\envoieMail($valeurToken);
+        $id_utilisateur = \App\Modele\Modele_Utilisateur::Utilisateur_Select_ParLogin($_POST["email"])["idUtilisateur"];
+        $date = new \DateTime();
+        $date=$date->format('Y-m-d H:i:s');
+        $date = $date->modify('+1 hour');
+        \App\Modele\Modele_tokens::Tokens_Creer("519", "$id_utilisateur","$date");
+        \App\Fonctions\envoieMail($valeurToken);
         break;
     case "reinitmdp":
 

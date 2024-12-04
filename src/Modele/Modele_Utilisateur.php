@@ -70,6 +70,7 @@ class Modele_Utilisateur
         return $utilisateur;
     }
 
+
     /**
      * @param $connexionPDO
      * @param $login

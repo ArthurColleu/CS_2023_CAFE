@@ -36,7 +36,7 @@ function tokenMotDePasse($nbChar){
     }
     return $pass;
 }
-    function envoieMail($pass)
+    function envoieMail($token)
     {
         $mail = new PHPMailer;
         $mail->isSMTP();
@@ -49,7 +49,7 @@ function tokenMotDePasse($nbChar){
         if ($mail->addReplyTo($_POST["email"], 'café')) {
             $mail->Subject = 'Objet : Réinitialisation de mot de passe !';
             $mail->isHTML(false);
-            $mail->Body = "Votre mot de passe à usage unique est le suivant : ".$pass;
+            $mail->Body = "Veuillez cliquer sur ce lien pour réinitialiser votre mdp : <a href='127.0.0.1:63342/CS_2023_CAFE/index.php?action=token&token=$token'>Lien à cliquer </a> ";
             if (!$mail->send()) {
                 $msg = 'Désolé, quelque chose a mal tourné. Veuillez réessayer plus tard.';
             } else {
@@ -60,3 +60,28 @@ function tokenMotDePasse($nbChar){
         }
         echo $msg;
     }
+function envoieMailTokens($pass)
+{
+    $mail = new PHPMailer;
+    $mail->isSMTP();
+    $mail->Host = '127.0.0.1';
+    $mail->Port = 1025;
+    $mail->SMTPAuth = false;
+    $mail->SMTPAutoTLS = false;
+    $mail->setFrom('café@café.fr', 'café');
+    $mail->addAddress($_POST["email"], 'Mon client');
+    if ($mail->addReplyTo($_POST["email"], 'café')) {
+        $mail->Subject = 'Objet : Réinitialisation de mot de passe !';
+        $mail->isHTML(false);
+        $mail->Body = "Votre mot de passe à usage unique est le suivant : ".$pass;
+        if (!$mail->send()) {
+            $msg = 'Désolé, quelque chose a mal tourné. Veuillez réessayer plus tard.';
+        } else {
+            $msg = 'Message envoyé ! Merci de nous avoir contactés.';
+        }
+    } else {
+        $msg = 'Il doit manquer quelque chose !';
+    }
+    echo $msg;
+}
+
