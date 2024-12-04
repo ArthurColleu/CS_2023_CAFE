@@ -25,8 +25,10 @@ class Modele_tokens
     {
         $dateFin= new \DateTime($dateFin);
         $dateFin=$dateFin->format('Y-m-d H:i:s');
+
         $octetsAleatoires = openssl_random_pseudo_bytes (256) ;
         $jeton = sodium_bin2base64($octetsAleatoires, SODIUM_BASE64_VARIANT_ORIGINAL);
+
         $connexionPDO = Singleton_ConnexionPDO::getInstance();
         $requetePreparee = $connexionPDO->prepare(
             'INSERT INTO `token`

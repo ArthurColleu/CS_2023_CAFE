@@ -33,7 +33,6 @@ class Vue_Connexion_Formulaire_client extends Vue_Composant
         {
             $str .=  " <label><b>Erreur : $this->msgErreur</b></label>";
         }
-
         $str .=  "
 
 </form>
