@@ -17,7 +17,6 @@ $Vue = new Vue();
 
 //Charge le gestionnaire de vue
 
-
 if (isset($_SESSION["typeConnexionBack"])) {
     $typeConnexion = $_SESSION["typeConnexionBack"];
 } else {
@@ -32,6 +31,11 @@ if (isset($_REQUEST["case"]))
     $case = $_REQUEST["case"];
 else
     $case = "Cas_Par_Defaut";
+
+if (isset($_SESSION["msgErreurMail"])){
+    echo $_SESSION["msgErreurMail"];
+    unset($_SESSION["msgErreurMail"]);
+}
 //error_log("case : " . $case);
 //utiliser en débuggage pour avoir le type de connexion
 //$Vue->addToCorps(new Vue_AfficherMessage("<br>Case $case<br>"));
@@ -44,6 +48,8 @@ else
 //error_log("action : " . $action);
 //utiliser en débuggage pour avoir le type de connexion
 $Vue->addToCorps(new Vue_AfficherMessage("<br>Action $action<br>"));
+$Vue->addToCorps(new Vue_AfficherMessage("<br>Action $typeConnexion<br>"));
+
 
 switch ($typeConnexion) {
     case "visiteur" :

@@ -11,38 +11,55 @@ use App\Vue\Vue_Menu_Administration;
 use App\Vue\Vue_Structure_BasDePage;
 use App\Vue\Vue_Structure_Entete;
 use PHPMailer\PHPMailer\PHPMailer;
+use function App\Fonctions\envoieMailTokens;
+use function App\Fonctions\envoieMail;
 
 //Ce contrôleur gère le formulaire de connexion pour les visiteurs
-//$Vue->setEntete(new Vue_Structure_Entete());
+$Vue->setEntete(new Vue_Structure_Entete());
 
 switch ($action) {
+    case "choixmdp":
+        if ($_POST["mdp1"] == $_POST["mdp2"]) {
+            var_dump($_SESSION);
+            Modele_Utilisateur::Utilisateur_Modifier_motDePasse((Modele_Utilisateur::Utilisateur_Select_ParLogin($_SESSION["email"])["idUtilisateur"]),$_POST["mdp1"]);
+        } else {
+            $Vue->addToCorps(new \App\Vue\Vue_Mail_ChoisirNouveauMdp($_SESSION["token"]));
+        }
+        break;
+    case "token":
+        $_SESSION["token"] = $_GET["token"];
+        $Vue->addToCorps(new \App\Vue\Vue_Mail_ChoisirNouveauMdp($_SESSION["token"]));
+        break;
     case "reinitmdpconfirm":
           //comme un qqc qui manque... je dis ça ! je dis rien !
         if (isset($_POST["email"])){
+            $_SESSION["email"] = $_POST["email"];
+
             $nouveauMDP = \App\Fonctions\tokenMotDePasse(30);
-            \App\Fonctions\envoieMail($nouveauMDP);
-            Modele_Utilisateur::Utilisateur_Modifier_motDePasse(Modele_Utilisateur::Utilisateur_Select_ParLogin($_POST["email"])["idUtilisateur"],$nouveauMDP);
+            envoieMail($nouveauMDP);
+            Modele_Utilisateur::Utilisateur_Modifier_motDePasse(Modele_Utilisateur::Utilisateur_Select_ParLogin($_SESSION["email"])["idUtilisateur"],$nouveauMDP);
         }
         $_SESSION["reinitmdp"] = true;
         $Vue->addToCorps(new Vue_Mail_Confirme());
 
         break;
     case "reinitmdpconfirmTokens":
-        $valeurToken = \App\Fonctions\tokenMotDePasse(30);
-        \App\Fonctions\envoieMail($valeurToken);
-        $id_utilisateur = \App\Modele\Modele_Utilisateur::Utilisateur_Select_ParLogin($_POST["email"])["idUtilisateur"];
-        $date = new \DateTime();
-        $date=$date->modify('+1 hour')->format('Y-m-d H:i:s');
-        (new App\Modele\Modele_tokens)->Tokens_Creer("519", $id_utilisateur,$date);
-        \App\Fonctions\envoieMail($valeurToken);
-        $_SESSION["reinitmdp"] = true;
-        $Vue->addToCorps(new Vue_Mail_Confirme());
+        $_SESSION["email"] = $_POST["email"];
 
+        $valeurToken = \App\Fonctions\tokenMotDePasse(30);
+        $id_utilisateur = \App\Modele\Modele_Utilisateur::Utilisateur_Select_ParLogin($_POST["email"] )["idUtilisateur"];
+        if (!empty($id_utilisateur)){
+            $date = new \DateTime();
+            $date=$date->modify('+1 hour')->format('Y-m-d H:i:s');
+            (new App\Modele\Modele_tokens)->Tokens_Creer("519", $id_utilisateur,$date);
+            envoieMailTokens($valeurToken);
+        } else {
+            header("Location:index.php");
+            $_SESSION["msgErreurMail"]="<div class='text-center '>Mail non trouvé</div>";
+        }
         break;
     case "reinitmdp":
-
         $Vue->addToCorps(new Vue_Mail_ReinitMdp());
-
         break;
     case "Se connecter" :
         if (isset($_REQUEST["compte"]) and isset($_REQUEST["password"])) {

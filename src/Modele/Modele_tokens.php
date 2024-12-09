@@ -21,6 +21,21 @@ class Modele_tokens
         return false;
     }
 
+    function Tokens_Select_By_value($Tokens)
+    {
+        $connexionPDO = Singleton_ConnexionPDO::getInstance();
+        $requetePreparee = $connexionPDO->prepare('
+        select *
+        from token
+        where valeur = :value');
+        $requetePreparee->bindValue('value', $Tokens);
+        $reponse = $requetePreparee->execute(); //$reponse boolean sur l'état de la requête
+        $tableauReponse = $requetePreparee->fetchAll(PDO::FETCH_ASSOC);
+        if (count($tableauReponse) == 1)
+            return $tableauReponse[0];
+        return false;
+    }
+
     function Tokens_Creer($codeAction, $idUtilisateur,$dateFin)
     {
         $dateFin= new \DateTime($dateFin);

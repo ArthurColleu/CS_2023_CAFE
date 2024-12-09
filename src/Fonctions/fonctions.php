@@ -36,8 +36,9 @@ function tokenMotDePasse($nbChar){
     }
     return $pass;
 }
-    function envoieMail($valeurToken)
+    function envoieMailTokens($valeurToken)
     {
+
         $mail = new PHPMailer;
         $mail->isSMTP();
         $mail->Host = '127.0.0.1';
@@ -60,7 +61,7 @@ function tokenMotDePasse($nbChar){
         }
         echo $msg;
     }
-function envoieMailTokens($pass)
+function envoieMail($pass)
 {
     $mail = new PHPMailer;
     $mail->isSMTP();
