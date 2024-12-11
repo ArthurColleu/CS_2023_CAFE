@@ -42,7 +42,7 @@ switch ($action) {
             Modele_Utilisateur::Utilisateur_Modifier_motDePasse(Modele_Utilisateur::Utilisateur_Select_ParLogin($_SESSION["email"])["idUtilisateur"],$nouveauMDP);
         }
         $_SESSION["reinitmdp"] = true;
-        $Vue->addToCorps(new Vue_Mail_Confirme());
+        $Vue->addToCorps(new Vue_Connexion_Formulaire_client());
 
         break;
     case "reinitmdpconfirmTokens":

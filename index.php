@@ -49,7 +49,7 @@ else
     $action = "Action_Par_Defaut";
 //error_log("action : " . $action);
 //utiliser en débuggage pour avoir le type de connexion
-//$Vue->addToCorps(new Vue_AfficherMessage("<br>Action $action<br>"));
+$Vue->addToCorps(new Vue_AfficherMessage("<br>Action $action<br>"));
 
 switch ($typeConnexion) {
     case "visiteur" :
