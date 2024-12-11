@@ -28,11 +28,7 @@ switch ($action) {
         }
         break;
     case "token":
-        $verifToken= (new App\Modele\Modele_tokens)->Tokens_Select_By_value($_GET["token"]);
-        if ($verifToken["dateFin"]<date("Y-m-d")) {
-            $_SESSION["token"] = $_GET["token"];
-            $Vue->addToCorps(new \App\Vue\Vue_Mail_ChoisirNouveauMdp($_SESSION["token"]));
-        }
+        $Vue->addToCorps(new \App\Vue\Vue_Mail_ChoisirNouveauMdp($_SESSION["token"]));
         break;
     case "reinitmdpconfirm":
           //comme un qqc qui manque... je dis ça ! je dis rien !
@@ -50,6 +46,8 @@ switch ($action) {
     case "reinitmdpconfirmTokens":
         $_SESSION["email"] = $_POST["email"];
         $valeurToken = \App\Fonctions\tokenMotDePasse(30);
+        $_SESSION["token"] = $valeurToken;
+
         $id_utilisateur = \App\Modele\Modele_Utilisateur::Utilisateur_Select_ParLogin($_POST["email"] )["idUtilisateur"];
         if (!empty($id_utilisateur)){
             $date = new \DateTime();
