@@ -16,7 +16,6 @@ switch ($RGPD) {
                 $Vue->setMenu(new Vue_Menu_Administration($_SESSION["typeConnexionBack"]));
                 break;
             case "utilisateurCafe":
-
                 $Vue->setMenu(new Vue_Menu_Administration($_SESSION["typeConnexionBack"]));
                 break;
             case "entrepriseCliente":
@@ -34,6 +33,7 @@ switch ($RGPD) {
         $Vue->addToCorps(new Vue_Connexion_Formulaire_client());
         break;
     default:
+        var_dump($_SESSION);
         $Vue->addToCorps(new Vue_ConsentementRGPD());
         break;
 

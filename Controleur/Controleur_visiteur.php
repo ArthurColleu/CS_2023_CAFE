@@ -34,24 +34,21 @@ switch ($action) {
           //comme un qqc qui manque... je dis ça ! je dis rien !
         if (isset($_POST["email"])){
             $_SESSION["email"] = $_POST["email"];
-
             $nouveauMDP = \App\Fonctions\tokenMotDePasse(30);
             envoieMail($nouveauMDP);
             Modele_Utilisateur::Utilisateur_Modifier_motDePasse(Modele_Utilisateur::Utilisateur_Select_ParLogin($_SESSION["email"])["idUtilisateur"],$nouveauMDP);
         }
         $_SESSION["reinitmdp"] = true;
         $Vue->addToCorps(new Vue_Connexion_Formulaire_client());
-
         break;
     case "reinitmdpconfirmTokens":
         $_SESSION["email"] = $_POST["email"];
         $valeurToken = \App\Fonctions\tokenMotDePasse(30);
         $_SESSION["token"] = $valeurToken;
-
         $id_utilisateur = \App\Modele\Modele_Utilisateur::Utilisateur_Select_ParLogin($_POST["email"] )["idUtilisateur"];
         if (!empty($id_utilisateur)){
             $date = new \DateTime();
-            $date=$date->modify('+1 hour')->format('Y-m-d H:i:s');
+            $date=$date->modify('+1 hours')->format('Y-m-d H:i:s');
             (new App\Modele\Modele_tokens)->Tokens_Creer("519", $id_utilisateur,$date);
             envoieMailTokens($valeurToken);
         } else {
@@ -78,45 +75,54 @@ switch ($action) {
                         //error_log("idUtilisateur : " . $_SESSION["idUtilisateur"]);
                         $_SESSION["idCategorie_utilisateur"] = $utilisateur["idCategorie_utilisateur"];
                         //error_log("idCategorie_utilisateur : " . $_SESSION["idCategorie_utilisateur"]);
+                        //var_dump($utilisateur);
                         switch ($utilisateur["idCategorie_utilisateur"]) {
-
                             case 1:
                                 $_SESSION["typeConnexionBack"] = "administrateurLogiciel"; //Champ inutile, mais bien pour voir ce qu'il se passe avec des étudiants !
-                                if ($utilisateur["aAccepterRGPD"]==0){
+                                if ($utilisateur["aAccepterRGPD"]===0){
+                                    $RGPD="";
                                     include "./Controleur/Controleur_AccepterRGPD.php";
-                                }
-                                else
+                                } else{
                                     $Vue->setMenu(new Vue_Menu_Administration($_SESSION["typeConnexionBack"]));
+                                }
                                 break;
                             case 2:
                                 $_SESSION["typeConnexionBack"] = "gestionnaireCatalogue";
-                                if ($utilisateur["aAccepterRGPD"]==0){
+                                if ($utilisateur["aAccepterRGPD"]===0){
+                                    $RGPD="";
                                     include "./Controleur/Controleur_AccepterRGPD.php";
+                                } else {
+                                    $Vue->setMenu(new Vue_Menu_Administration($_SESSION["typeConnexionBack"]));
+                                    $Vue->addToCorps(new \App\Vue\Vue_AfficherMessage("Bienvenue " . $_REQUEST["compte"]));
                                 }
-                                $Vue->setMenu(new Vue_Menu_Administration($_SESSION["typeConnexionBack"]));
-                                $Vue->addToCorps(new \App\Vue\Vue_AfficherMessage("Bienvenue " . $_REQUEST["compte"]));
+
                                 break;
                             case 3:
                                 $_SESSION["typeConnexionBack"] = "entrepriseCliente";
-                                if ($utilisateur["aAccepterRGPD"]==0){
+                                if ($utilisateur["aAccepterRGPD"]===0){
+                                    $RGPD="";
                                     include "./Controleur/Controleur_AccepterRGPD.php";
+                                }else{
+                                    //error_log("idUtilisateur : " . $_SESSION["idUtilisateur"]);
+                                    $_SESSION["idEntreprise"] = Modele_Entreprise::Entreprise_Select_Par_IdUtilisateur($_SESSION["idUtilisateur"])["idEntreprise"];
+                                    include "./Controleur/Controleur_Gerer_Entreprise.php";
                                 }
-                                //error_log("idUtilisateur : " . $_SESSION["idUtilisateur"]);
-                                $_SESSION["idEntreprise"] = Modele_Entreprise::Entreprise_Select_Par_IdUtilisateur($_SESSION["idUtilisateur"])["idEntreprise"];
-                                include "./Controleur/Controleur_Gerer_Entreprise.php";
+
                                 break;
                             case 4:
                                 $_SESSION["typeConnexionBack"] = "salarieEntrepriseCliente";
-                                if ($utilisateur["aAccepterRGPD"]==0){
+                                if ($utilisateur["aAccepterRGPD"]===0){
+                                    $RGPD="";
                                     include "./Controleur/Controleur_AccepterRGPD.php";
+                                }else {
+                                    $_SESSION["idSalarie"] = $utilisateur["idUtilisateur"];
+                                    $_SESSION["idEntreprise"] = Modele_Salarie::Salarie_Select_byId($_SESSION["idUtilisateur"])["idEntreprise"];
+                                    include "./Controleur/Controleur_Catalogue_client.php";
                                 }
-                                $_SESSION["idSalarie"] = $utilisateur["idUtilisateur"];
-                                $_SESSION["idEntreprise"] = Modele_Salarie::Salarie_Select_byId($_SESSION["idUtilisateur"])["idEntreprise"];
-                                include "./Controleur/Controleur_Catalogue_client.php";
+
                                 break;
                             case 5:
                                 echo $utilisateur['typeConnexionBack'];
-
                                 $_SESSION["typeConnexionBack"] = "commercialCafe";
                                 $Vue->setMenu(new Vue_Menu_Administration($_SESSION["typeConnexionBack"]));
                                 break;
