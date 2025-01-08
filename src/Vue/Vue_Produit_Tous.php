@@ -20,7 +20,7 @@ class Vue_Produit_Tous extends Vue_Composant
                     <tr>
                         <td colspan='4'>
                             <form style='display: contents;' method='post'>
-                                
+                                ".genereChampHiddenCSRF()."
                                 <input type='hidden' name='case' value='Gerer_catalogue'>
                                 <input type='hidden' name='idCategorie' value='$this->idCategorie'>
                                 <button class='btnRadius' type='submit' value='nouveauProduit' name='action'>

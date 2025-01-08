@@ -25,7 +25,7 @@ Les salariés se connecteront avec leur e-mail<br>
          <tr>
             <td colspan="5" style="text-align: center">
                 <form style=\'display: contents\'>
-                    
+                    '.genereChampHiddenCSRF().'
                     <input type="hidden" name="case" value="Gerer_Entreprise">
  
                         <button type="submit" 

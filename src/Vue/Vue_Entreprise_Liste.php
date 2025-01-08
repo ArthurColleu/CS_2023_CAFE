@@ -23,7 +23,7 @@ class Vue_Entreprise_Liste  extends Vue_Composant
          <tr>
             <td colspan="5" style="text-align: center">
                 <form style=\'display: contents\'>
-                     
+                     ".genereChampHiddenCSRF()."
                     <input type="hidden" name="case" value="Gerer_entreprisesPartenaires">
  
                         <button type="submit" 
